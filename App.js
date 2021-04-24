@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Dimensions,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -12,28 +13,26 @@ import {
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import firestore from '@react-native-firebase/firestore';
 
-const Section = ({ children, title }) => {
+const Section = ({ content, label }) => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+      <View>
+        <Text
+          style={[
+            styles.sectionDescription,
+            {
+              color: isDarkMode ? Colors.light : Colors.dark,
+            },
+          ]}>
+          {content}
+        </Text>
+      </View>
+      <View>
+        <Text style={styles.sectionLabel}>
+          {label}
+        </Text>
+      </View>
     </View>
   );
 };
@@ -71,9 +70,7 @@ const App = () => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           {
-            data.map((x) => (<Section key={x.id} title={x.title}>
-              {x.content}
-            </Section>))
+            data.map((x) => <Section key={x.id} content={x.content} label={x.label} />)
           }
           {
             data.length === 0 && <Text>No LifeBit posted!!!</Text>
@@ -86,19 +83,31 @@ const App = () => {
 
 const styles = StyleSheet.create({
   sectionContainer: {
-    paddingHorizontal: 24,
+    paddingRight: 40,
+    paddingLeft: 10,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#AAA'
+    borderBottomColor: '#AAA',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
   },
+  sectionLabel: {
+    backgroundColor: '#EF1C4D',
+    color: '#FFF',
+    borderRadius: 10,
+    paddingHorizontal: 5,
+    fontSize: 10,
+    lineHeight: 20
+  },
   sectionDescription: {
-    marginTop: 8,
     fontSize: 13,
     fontWeight: '400',
+    textAlign: 'justify'
   },
   highlight: {
     fontWeight: '700',
