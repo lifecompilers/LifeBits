@@ -1,38 +1,87 @@
 import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
+  Linking,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import firestore from '@react-native-firebase/firestore';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 
-const Section = ({ content, label }) => {
+const openLink = async (url) => {
+  try {
+    if (await InAppBrowser.isAvailable()) {
+      await InAppBrowser.open(url, {
+        // iOS Properties
+        dismissButtonStyle: 'cancel',
+        readerMode: false,
+        animated: true,
+        modalPresentationStyle: 'fullScreen',
+        modalTransitionStyle: 'coverVertical',
+        modalEnabled: true,
+        enableBarCollapsing: false,
+        // Android Properties
+        showTitle: true,
+        enableUrlBarHiding: true,
+        enableDefaultShare: true,
+        forceCloseOnRedirection: false,
+        // Specify full animation resource identifier(package:anim/name)
+        // or only resource name(in case of animation bundled with app).
+        animations: {
+          startEnter: 'slide_in_right',
+          startExit: 'slide_out_left',
+          endEnter: 'slide_in_left',
+          endExit: 'slide_out_right'
+        }
+      });
+    }
+    else Linking.openURL(url)
+  } catch (error) {
+    Alert.alert(error.message)
+  }
+}
+
+const Section = ({ content, label, link }) => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
-      <View>
-        <Text
-          style={[
-            styles.sectionDescription,
-            {
-              color: isDarkMode ? Colors.light : Colors.dark,
-            },
-          ]}>
-          {content}
-        </Text>
+      <View style={styles.sectionContent}>
+        <View>
+          <Text
+            style={[
+              styles.sectionDescription,
+              {
+                color: isDarkMode ? Colors.light : Colors.dark,
+              },
+            ]}>
+            {content}
+          </Text>
+        </View>
+        <View>
+          <Text style={styles.sectionLabel}>
+            {label}
+          </Text>
+        </View>
       </View>
-      <View>
-        <Text style={styles.sectionLabel}>
-          {label}
-        </Text>
-      </View>
+      {
+        link &&
+        <Pressable
+          onPress={() => openLink(link)}
+        >
+          <Text
+            style={styles.link}
+            numberOfLines={1}>{link}</Text>
+        </Pressable>
+      }
     </View>
   );
 };
@@ -70,7 +119,7 @@ const App = () => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           {
-            data.map((x) => <Section key={x.id} content={x.content} label={x.label} />)
+            data.map((x) => <Section key={x.id} content={x.content} label={x.label} link={x.link} />)
           }
           {
             data.length === 0 && <Text>No LifeBit posted!!!</Text>
@@ -88,6 +137,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#AAA',
+  },
+  sectionContent: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between'
@@ -109,8 +160,10 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     textAlign: 'justify'
   },
-  highlight: {
-    fontWeight: '700',
+  link: {
+    paddingTop: 2,
+    fontSize: 12,
+    color: '#00F'
   },
 });
 
