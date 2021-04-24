@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1097346522775",
+    "project_id": "lifebits-bf50e",
+    "storage_bucket": "lifebits-bf50e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1097346522775:android:3f8e10c6d04f86410013d2",
+        "android_client_info": {
+          "package_name": "com.lifecompilers.lifebits"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1097346522775-c324relglu1ui82d2n92pqpb8uq4u92g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZ4ZwBjNaIT0ni6U1T88b6AzUr6Guc4s0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1097346522775-c324relglu1ui82d2n92pqpb8uq4u92g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
