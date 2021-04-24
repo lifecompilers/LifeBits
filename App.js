@@ -54,9 +54,11 @@ const App = () => {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
+          <Section title="Security Bug in MIUI 12.5">
+            Lots of noise created by MIUI bugs, users leaving Xiomi
+          </Section>
+          <Section title="Security Bug in MIUI 12.5">
+            Lots of noise created by MIUI bugs, users leaving Xiomi
           </Section>
         </View>
       </ScrollView>
@@ -66,16 +68,18 @@ const App = () => {
 
 const styles = StyleSheet.create({
   sectionContainer: {
-    marginTop: 32,
     paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#AAA'
   },
   sectionTitle: {
-    fontSize: 24,
+    fontSize: 16,
     fontWeight: '600',
   },
   sectionDescription: {
     marginTop: 8,
-    fontSize: 18,
+    fontSize: 13,
     fontWeight: '400',
   },
   highlight: {
