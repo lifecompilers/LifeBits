@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import firestore from '@react-native-firebase/firestore';
 
 const Section = ({ children, title }) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -44,6 +45,21 @@ const App = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  let [data, setData] = useState([]);
+
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('TechBits')
+      .onSnapshot(querySnapshot => {
+        let data = [];
+        querySnapshot.forEach(documentSnapshot => {
+          data.push({ id: documentSnapshot.id, ...documentSnapshot.data() });
+        });
+        setData(data);
+      });
+    return () => subscriber();
+  }, []);
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
@@ -54,12 +70,14 @@ const App = () => {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Security Bug in MIUI 12.5">
-            Lots of noise created by MIUI bugs, users leaving Xiomi
-          </Section>
-          <Section title="Security Bug in MIUI 12.5">
-            Lots of noise created by MIUI bugs, users leaving Xiomi
-          </Section>
+          {
+            data.map((x) => (<Section key={x.id} title={x.title}>
+              {x.content}
+            </Section>))
+          }
+          {
+            data.length === 0 && <Text>No LifeBit posted!!!</Text>
+          }
         </View>
       </ScrollView>
     </SafeAreaView>
