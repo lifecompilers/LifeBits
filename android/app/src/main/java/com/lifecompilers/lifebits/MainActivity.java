@@ -1,4 +1,4 @@
-package com.lifebits;
+package com.lifecompilers.lifebits;
 
 import com.facebook.react.ReactActivity;
 

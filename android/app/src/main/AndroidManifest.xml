@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.lifebits">
+  package="com.lifecompilers.lifebits">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
