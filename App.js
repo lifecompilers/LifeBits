@@ -12,18 +12,19 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import firestore from '@react-native-firebase/firestore';
 import SplashScreen from 'react-native-splash-screen';
 
-const Section = ({ content, author }) => {
-  const isDarkMode = useColorScheme() === 'dark';
+function getRandomColor(index) {
+  const colors = ['#ff006e', 'blue', 'red', 'green', '#9b5de5'];
+  return colors[index % 5];
+}
+
+const Section = ({ content, author, index }) => {
   return (
-    <View style={styles.sectionContainer}>
+    <View style={[styles.sectionContainer, { backgroundColor: getRandomColor(index) }]}>
       <View>
         <Text
-          style={[
-            styles.sectionDescription,
-            {
-              color: isDarkMode ? Colors.light : Colors.dark,
-            },
-          ]}>
+          style={
+            styles.sectionDescription
+          }>
           {content}
         </Text>
       </View>
@@ -56,8 +57,8 @@ const App = () => {
           data.push({ id: documentSnapshot.id, ...documentSnapshot.data() });
         });
         setData(data);
+        SplashScreen.hide();
       });
-    SplashScreen.hide();
     return () => subscriber();
   }, []);
 
@@ -67,12 +68,9 @@ const App = () => {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
+        <View>
           {
-            data.map((x) => <Section key={x.id} content={x.content} author={x.author} />)
+            data.map((x, index) => <Section key={x.id} content={x.content} author={x.author} index={index} />)
           }
           {
             data.length === 0 && <Text>No LifeBit posted!!!</Text>
@@ -85,9 +83,9 @@ const App = () => {
 
 const styles = StyleSheet.create({
   sectionContainer: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#AAA',
+    padding: 20,
+    paddingVertical: 30,
+    marginVertical: 5,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between'
@@ -98,13 +96,22 @@ const styles = StyleSheet.create({
   },
   sectionAuthor: {
     alignSelf: 'flex-end',
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '400',
+    color: '#FFF',
+    paddingTop: 5,
+    textShadowColor: 'rgba(0, 0, 0, 1)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10
   },
   sectionDescription: {
-    fontSize: 13,
+    color: '#FFF',
+    fontSize: 18,
     fontWeight: '400',
-    textAlign: 'justify'
+    textAlign: 'justify',
+    textShadowColor: 'rgba(0, 0, 0, 1)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10
   },
   highlight: {
     fontWeight: '700',
