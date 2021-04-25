@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import firestore from '@react-native-firebase/firestore';
+import SplashScreen from 'react-native-splash-screen';
 
 const Section = ({ content, author }) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -56,6 +57,7 @@ const App = () => {
         });
         setData(data);
       });
+    SplashScreen.hide();
     return () => subscriber();
   }, []);
 
