@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Dimensions,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -9,11 +8,10 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import firestore from '@react-native-firebase/firestore';
 
-const Section = ({ content, label }) => {
+const Section = ({ content, author }) => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
@@ -28,11 +26,13 @@ const Section = ({ content, label }) => {
           {content}
         </Text>
       </View>
-      <View>
-        <Text style={styles.sectionLabel}>
-          {label}
-        </Text>
-      </View>
+      {
+        author && <View>
+          <Text style={styles.sectionAuthor}>
+            - {author}
+          </Text>
+        </View>
+      }
     </View>
   );
 };
@@ -48,7 +48,7 @@ const App = () => {
 
   useEffect(() => {
     const subscriber = firestore()
-      .collection('TechBits')
+      .collection('LifeBits')
       .onSnapshot(querySnapshot => {
         let data = [];
         querySnapshot.forEach(documentSnapshot => {
@@ -70,7 +70,7 @@ const App = () => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           {
-            data.map((x) => <Section key={x.id} content={x.content} label={x.label} />)
+            data.map((x) => <Section key={x.id} content={x.content} author={x.author} />)
           }
           {
             data.length === 0 && <Text>No LifeBit posted!!!</Text>
@@ -83,26 +83,21 @@ const App = () => {
 
 const styles = StyleSheet.create({
   sectionContainer: {
-    paddingRight: 40,
-    paddingLeft: 10,
-    paddingVertical: 12,
+    padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#AAA',
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between'
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
   },
-  sectionLabel: {
-    backgroundColor: '#EF1C4D',
-    color: '#FFF',
-    borderRadius: 10,
-    paddingHorizontal: 5,
-    fontSize: 10,
-    lineHeight: 20
+  sectionAuthor: {
+    alignSelf: 'flex-end',
+    fontSize: 11,
+    fontWeight: '400',
   },
   sectionDescription: {
     fontSize: 13,
