@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import firestore from '@react-native-firebase/firestore';
 import SplashScreen from 'react-native-splash-screen';
+import Swiper from 'react-native-deck-swiper';
 
 function getRandomColor(index) {
   const colors = ['#ff006e', 'blue', 'red', 'green', '#9b5de5'];
@@ -40,11 +36,6 @@ const Section = ({ content, author, index }) => {
 };
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
 
   let [data, setData] = useState([]);
 
@@ -61,34 +52,48 @@ const App = () => {
       });
     return () => subscriber();
   }, []);
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <View>
-          {
-            data.map((x, index) => <Section key={x.id} content={x.content} author={x.author} index={index} />)
-          }
-          {
-            data.length === 0 && <Text>No LifeBit posted!!!</Text>
-          }
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <View style={styles.container}>
+      {
+        data?.length > 0 && <Swiper
+          cards={data}
+          renderCard={(x, index) => {
+            return (
+              <Section key={x.id} content={x.content} author={x.author} index={index} />
+            )
+          }}
+          stackSeparation={30}
+          cardIndex={0}
+          infinite
+          backgroundColor={'#EF1C4D'}
+          cardStyle={styles.swiperContainer}
+          stackSize={3}>
+        </Swiper>
+      }
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 100
+  },
+  swiperContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   sectionContainer: {
-    padding: 20,
-    paddingVertical: 30,
+    padding: 30,
+    paddingVertical: 80,
     marginVertical: 5,
+    height: 400,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between'
+    justifyContent: 'center',
+    borderColor: '#FFF',
+    borderWidth: 15
   },
   sectionTitle: {
     fontSize: 16,
@@ -96,7 +101,7 @@ const styles = StyleSheet.create({
   },
   sectionAuthor: {
     alignSelf: 'flex-end',
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '400',
     color: '#FFF',
     paddingTop: 5,
@@ -106,16 +111,13 @@ const styles = StyleSheet.create({
   },
   sectionDescription: {
     color: '#FFF',
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: '400',
     textAlign: 'justify',
     textShadowColor: 'rgba(0, 0, 0, 1)',
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+  }
 });
 
 export default App;
